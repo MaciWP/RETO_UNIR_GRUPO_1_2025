@@ -15,7 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Implementation of SolicitudService interface.
@@ -30,9 +31,6 @@ public class SolicitudServiceImpl implements SolicitudService {
 
     @Override
     public Solicitud save(Solicitud solicitud) {
-        if (solicitud.getFecha() == null) {
-            solicitud.setFecha(LocalDate.now());
-        }
         if (solicitud.getEstado() == null) {
             solicitud.setEstado(0); // Estado pendiente por defecto
         }
@@ -42,7 +40,18 @@ public class SolicitudServiceImpl implements SolicitudService {
     @Override
     public Solicitud saveWithFile(Solicitud solicitud, MultipartFile cvFile) {
         if (cvFile != null && !cvFile.isEmpty()) {
-            String fileName = UUID.randomUUID().toString() + "_" + cvFile.getOriginalFilename();
+            LocalDateTime now = LocalDateTime.now();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss");
+            String timestamp = now.format(formatter);
+            String username = solicitud.getUsuario().getUsername();
+            String originalFilename = cvFile.getOriginalFilename();
+
+            String safeOriginalFilename = originalFilename != null
+                    ? originalFilename.replaceAll("[^a-zA-Z0-9.-]", "_")
+                    : "unknown.pdf";
+
+            String fileName = timestamp + "_" + username + "_" + safeOriginalFilename;
+
             String filePath = fileStorageService.storeFile(cvFile, fileName);
             solicitud.setArchivo(filePath);
         }
@@ -152,4 +161,23 @@ public class SolicitudServiceImpl implements SolicitudService {
                 .findByVacanteIdVacanteAndUsuarioUsername(idVacante, username)
                 .isPresent();
     }
+
+    @Override
+    public Solicitud destacarSolicitud(Integer id) {
+        Solicitud solicitud = solicitudRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Solicitud no encontrada con id: " + id));
+
+        solicitud.setDestacado((byte)1);
+        return solicitudRepository.save(solicitud);
+    }
+
+    @Override
+    public Solicitud quitarDestacadoSolicitud(Integer id) {
+        Solicitud solicitud = solicitudRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Solicitud no encontrada con id: " + id));
+
+        solicitud.setDestacado((byte)0);
+        return solicitudRepository.save(solicitud);
+    }
+
 }

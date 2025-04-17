@@ -2,8 +2,10 @@ package com.redempleo.service.impl;
 
 import com.redempleo.exception.ResourceNotFoundException;
 import com.redempleo.model.Perfil;
+import com.redempleo.model.Solicitud;
 import com.redempleo.model.Usuario;
 import com.redempleo.repository.PerfilRepository;
+import com.redempleo.repository.SolicitudRepository;
 import com.redempleo.repository.UsuarioRepository;
 import com.redempleo.service.UsuarioService;
 import jakarta.transaction.Transactional;
@@ -25,6 +27,8 @@ public class UsuarioServiceImpl implements UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final PerfilRepository perfilRepository;
     private final PasswordEncoder passwordEncoder;
+    private final SolicitudRepository solicitudRepository;
+
 
     @Override
     public Usuario save(Usuario usuario) {
@@ -71,14 +75,19 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
 
     @Override
-    public void deleteByUsername(String username) {
-        usuarioRepository.deleteById(username);
-    }
-
-    @Override
     public Usuario disableUser(String username) {
         Usuario usuario = usuarioRepository.findById(username)
                 .orElseThrow(() -> new ResourceNotFoundException("Usuario no encontrado con username: " + username));
+
+        // Cancel all active solicitudes from the user
+        List<Solicitud> activeSolicitudes = solicitudRepository.findByUsuarioUsername(username).stream()
+                .filter(s -> s.getEstado() == 0)
+                .toList();
+
+        for (Solicitud solicitud : activeSolicitudes) {
+            solicitud.setEstado(3); // Estado cancelado
+            solicitudRepository.save(solicitud);
+        }
 
         usuario.setEnabled(0);
         return usuarioRepository.save(usuario);

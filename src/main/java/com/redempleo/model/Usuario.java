@@ -11,8 +11,11 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Entity representing a user in the system.
@@ -54,16 +57,11 @@ public class Usuario {
     @Column(name = "fecha_registro", nullable = false)
     private LocalDate fechaRegistro;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
-            name = "usuario_perfil",
-            joinColumns = @JoinColumn(name = "username"),
-            inverseJoinColumns = @JoinColumn(name = "id_perfil")
-    )
-    private Set<Perfil> perfiles = new HashSet<>();
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<UsuarioPerfil> usuariosPerfiles = new HashSet<>();
 
     @OneToMany(mappedBy = "usuario")
-    private Set<Solicitud> solicitudes = new HashSet<>();
+    private List<Solicitud> listaSolicitudes = new ArrayList<>();
 
     /**
      * Convenience method to add a perfil to the usuario.
@@ -72,7 +70,23 @@ public class Usuario {
      * @return the updated usuario
      */
     public Usuario addPerfil(Perfil perfil) {
-        this.perfiles.add(perfil);
+        UsuarioPerfil usuarioPerfil = new UsuarioPerfil(this, perfil);
+        this.usuariosPerfiles.add(usuarioPerfil);
+        perfil.getUsuariosPerfiles().add(usuarioPerfil);
+        return this;
+    }
+
+    /**
+     * Convenience method to add a perfil to the usuario with empresa relation.
+     *
+     * @param perfil the perfil to add
+     * @param idEmpresa the empresa id
+     * @return the updated usuario
+     */
+    public Usuario addPerfil(Perfil perfil, Integer idEmpresa) {
+        UsuarioPerfil usuarioPerfil = new UsuarioPerfil(this, perfil, idEmpresa);
+        this.usuariosPerfiles.add(usuarioPerfil);
+        perfil.getUsuariosPerfiles().add(usuarioPerfil);
         return this;
     }
 
@@ -83,8 +97,21 @@ public class Usuario {
      * @return the updated usuario
      */
     public Usuario removePerfil(Perfil perfil) {
-        this.perfiles.remove(perfil);
+        this.usuariosPerfiles.removeIf(up -> up.getPerfil().equals(perfil));
+        perfil.getUsuariosPerfiles().removeIf(up -> up.getUsuario().equals(this));
         return this;
+    }
+
+    /**
+     * Get perfiles from usuario_perfil relationship.
+     *
+     * @return set of perfiles
+     */
+    @Transient
+    public Set<Perfil> getPerfiles() {
+        return this.usuariosPerfiles.stream()
+                .map(UsuarioPerfil::getPerfil)
+                .collect(Collectors.toSet());
     }
 
     @PrePersist

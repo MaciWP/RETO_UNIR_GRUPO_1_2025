@@ -51,13 +51,6 @@ public interface UsuarioService {
     List<Usuario> findAll();
 
     /**
-     * Delete a user by username.
-     *
-     * @param username The username
-     */
-    void deleteByUsername(String username);
-
-    /**
      * Disable a user by username.
      *
      * @param username The username

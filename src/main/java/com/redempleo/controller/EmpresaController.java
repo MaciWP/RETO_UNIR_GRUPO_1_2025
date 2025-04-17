@@ -126,4 +126,17 @@ public class EmpresaController {
         List<Empresa> empresas = empresaService.findAll();
         return ResponseEntity.ok(empresas);
     }
+
+    /**
+     * Check if a company with the given business name exists.
+     *
+     * @param razonSocial The business name to check
+     * @return true if it exists, false otherwise
+     */
+    @GetMapping("/verificar-razon-social")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Boolean> verificarRazonSocial(@RequestParam String razonSocial) {
+        boolean existe = empresaService.existsByRazonSocial(razonSocial);
+        return ResponseEntity.ok(existe);
+    }
 }

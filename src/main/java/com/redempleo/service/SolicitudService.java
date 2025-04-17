@@ -153,4 +153,20 @@ public interface SolicitudService {
      * @return true if the user has already applied, false otherwise
      */
     boolean hasUserApplied(Integer idVacante, String username);
+
+    /**
+     * Highlight a request.
+     *
+     * @param id The ID of the request
+     * @return The updated request
+     */
+    Solicitud destacarSolicitud(Integer id);
+
+    /**
+     * Remove highlight from a request.
+     *
+     * @param id The ID of the request
+     * @return The updated request
+     */
+    Solicitud quitarDestacadoSolicitud(Integer id);
 }

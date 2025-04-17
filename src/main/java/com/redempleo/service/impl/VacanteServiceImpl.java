@@ -71,11 +71,6 @@ public class VacanteServiceImpl implements VacanteService {
     }
 
     @Override
-    public void deleteById(Integer id) {
-        vacanteRepository.deleteById(id);
-    }
-
-    @Override
     public Vacante cancelVacancy(Integer id) {
         Vacante vacante = vacanteRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Vacante no encontrada con id: " + id));

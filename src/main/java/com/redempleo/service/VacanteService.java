@@ -54,13 +54,6 @@ public interface VacanteService {
     Page<Vacante> findAll(Pageable pageable);
 
     /**
-     * Delete a vacancy by ID.
-     *
-     * @param id The vacancy ID
-     */
-    void deleteById(Integer id);
-
-    /**
      * Cancel a vacancy by ID.
      *
      * @param id The vacancy ID
