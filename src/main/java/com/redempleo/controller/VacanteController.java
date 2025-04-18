@@ -111,15 +111,16 @@ public class VacanteController {
 
     /**
      * Delete a vacancy.
+     * Now it cancels the vacancy instead of deleting it.
      *
      * @param id The vacancy ID
-     * @return No content response
+     * @return The canceled vacancy
      */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN', 'EMPRESA')")
-    public ResponseEntity<Void> deleteVacante(@PathVariable Integer id) {
-        vacanteService.deleteById(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<Vacante> deleteVacante(@PathVariable Integer id) {
+        Vacante canceledVacante = vacanteService.cancelVacancy(id);
+        return ResponseEntity.ok(canceledVacante);
     }
 
     /**

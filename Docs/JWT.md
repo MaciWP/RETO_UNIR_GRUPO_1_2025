@@ -173,9 +173,8 @@ Configura:
 ### 🔑 Inicio de sesión
 
 Petición:
-
-```json
 POST /api/auth/login
+```json
 {
   "username": "usuario1",
   "password": "user123"

@@ -1,3 +1,4 @@
+// src/main/java/com/redempleo/model/Vacante.java
 package com.redempleo.model;
 
 import com.redempleo.model.enums.EstadoVacante;
@@ -10,8 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Entity representing a job vacancy in the system.
@@ -50,7 +51,7 @@ public class Vacante {
     private EstadoVacante estado = EstadoVacante.CREADA;
 
     @Column(name = "destacado")
-    private Integer destacado;
+    private Byte destacado;
 
     @Column(name = "imagen", length = 250)
     private String imagen;
@@ -67,7 +68,7 @@ public class Vacante {
     private Empresa empresa;
 
     @OneToMany(mappedBy = "vacante")
-    private Set<Solicitud> solicitudes = new HashSet<>();
+    private List<Solicitud> listaSolicitudes = new ArrayList<>();
 
     @PrePersist
     protected void onCreate() {
@@ -76,6 +77,9 @@ public class Vacante {
         }
         if (estado == null) {
             estado = EstadoVacante.CREADA;
+        }
+        if (destacado == null) {
+            destacado = 0;
         }
     }
 }

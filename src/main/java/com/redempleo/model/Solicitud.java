@@ -38,11 +38,14 @@ public class Solicitud {
     @Column(name = "estado")
     private Integer estado = 0; // 0: Pendiente, 1: Adjudicada, 2: Rechazada, 3: Cancelada por el usuario
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @Column(name = "destacado")
+    private Byte destacado = 0; // 0: Falso/No, 1: Verdadero/Si
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_vacante", nullable = false)
     private Vacante vacante;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "username", nullable = false)
     private Usuario usuario;
 
@@ -53,6 +56,9 @@ public class Solicitud {
         }
         if (estado == null) {
             estado = 0; // Pendiente
+        }
+        if (destacado == null) {
+            destacado = 0; // No destacado por defecto
         }
     }
 }

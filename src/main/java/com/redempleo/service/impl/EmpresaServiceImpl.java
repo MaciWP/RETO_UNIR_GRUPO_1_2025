@@ -32,7 +32,6 @@ public class EmpresaServiceImpl implements EmpresaService {
                 .orElseThrow(() -> new ResourceNotFoundException("Empresa no encontrada con id: " + id));
 
         empresa.setRazonSocial(empresaDetails.getRazonSocial());
-        empresa.setDescripcion(empresaDetails.getDescripcion());
         empresa.setDireccionFiscal(empresaDetails.getDireccionFiscal());
         empresa.setPais(empresaDetails.getPais());
 

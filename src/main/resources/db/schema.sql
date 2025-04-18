@@ -6,7 +6,6 @@ USE redempleo;
 CREATE TABLE IF NOT EXISTS empresas (
     id_empresa INT AUTO_INCREMENT PRIMARY KEY,
     razon_social VARCHAR(100) NOT NULL,
-    descripcion TEXT NOT NULL,
     direccion_fiscal VARCHAR(200) NOT NULL,
     pais VARCHAR(50) NOT NULL
 );
@@ -39,9 +38,12 @@ CREATE TABLE IF NOT EXISTS usuarios (
 CREATE TABLE IF NOT EXISTS usuario_perfil (
     username VARCHAR(45) NOT NULL,
     id_perfil INT NOT NULL,
+    id_empresa INT DEFAULT 0,
+    comprobado TINYINT DEFAULT 0,
     PRIMARY KEY (username, id_perfil),
     CONSTRAINT FK_usuario_perfil_username FOREIGN KEY (username) REFERENCES usuarios(username) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT FK_usuario_perfil_id_perfil FOREIGN KEY (id_perfil) REFERENCES perfiles(id_perfil) ON DELETE CASCADE ON UPDATE CASCADE
+    CONSTRAINT FK_usuario_perfil_id_perfil FOREIGN KEY (id_perfil) REFERENCES perfiles(id_perfil) ON DELETE CASCADE ON UPDATE CASCADE,
+    CONSTRAINT FK_usuario_perfil_id_empresa FOREIGN KEY (id_empresa) REFERENCES empresas(id_empresa) ON DELETE SET NULL ON UPDATE CASCADE
 );
 
 -- Tabla de vacantes
@@ -52,7 +54,7 @@ CREATE TABLE IF NOT EXISTS vacantes (
     fecha DATE NOT NULL,
     salario DOUBLE NULL,
     estado ENUM('CREADA', 'CANCELADA', 'ASIGNADA') NOT NULL DEFAULT 'CREADA',
-    destacado INT NULL DEFAULT 0,
+    destacado TINYINT NULL DEFAULT 0,
     imagen VARCHAR(250) NULL,
     detalles TEXT NULL,
     id_categoria INT NOT NULL,
@@ -69,6 +71,7 @@ CREATE TABLE IF NOT EXISTS solicitudes (
     comentarios VARCHAR(2000) NULL,
     estado INT NOT NULL DEFAULT 0,
     id_vacante INT NOT NULL,
+    destacado TINYINT NULL DEFAULT 0,
     username VARCHAR(45) NOT NULL,
     CONSTRAINT FK_solicitudes_vacante FOREIGN KEY (id_vacante) REFERENCES vacantes(id_vacante) ON DELETE RESTRICT ON UPDATE CASCADE,
     CONSTRAINT FK_solicitudes_username FOREIGN KEY (username) REFERENCES usuarios(username) ON DELETE RESTRICT ON UPDATE CASCADE

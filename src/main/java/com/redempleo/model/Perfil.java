@@ -32,8 +32,8 @@ public class Perfil {
     private String nombre;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "perfiles")
-    private Set<Usuario> usuarios = new HashSet<>();
+    @OneToMany(mappedBy = "perfil")
+    private Set<UsuarioPerfil> usuariosPerfiles = new HashSet<>();
 
     /**
      * Constructor with perfil name.

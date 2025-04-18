@@ -36,5 +36,5 @@ public class Categoria {
     private String descripcion;
 
     @OneToMany(mappedBy = "categoria")
-    private List<Vacante> vacantes = new ArrayList<>();
+    private List<Vacante> listaVacantes = new ArrayList<>();
 }

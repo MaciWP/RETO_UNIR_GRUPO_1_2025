@@ -32,10 +32,6 @@ public class Empresa {
     @Column(name = "razon_social", nullable = false, length = 100)
     private String razonSocial;
 
-    @NotBlank(message = "La descripción es obligatoria")
-    @Column(name = "descripcion", nullable = false, length = 1000)
-    private String descripcion;
-
     @NotBlank(message = "La dirección fiscal es obligatoria")
     @Column(name = "direccion_fiscal", nullable = false, length = 200)
     private String direccionFiscal;
@@ -45,5 +41,6 @@ public class Empresa {
     private String pais;
 
     @OneToMany(mappedBy = "empresa")
-    private List<Vacante> vacantes = new ArrayList<>();
+    @OrderColumn(name = "id_vacante")
+    private List<Vacante> listaVacantes = new ArrayList<>();
 }
