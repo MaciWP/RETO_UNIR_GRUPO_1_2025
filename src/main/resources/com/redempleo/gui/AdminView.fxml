@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" spacing="30.0"
+      xmlns="http://javafx.com/javafx"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.redempleo.gui.AdminController">
+   <children>
+      <Button fx:id="gestionarEmpresasButton" mnemonicParsing="false" onAction="#onGestionarEmpresas" text="Gestionar Empresas" textAlignment="CENTER" />
+      <Button fx:id="gestionarCategoriasButton" mnemonicParsing="false" onAction="#onGestionarCategorias" text="Gestionar Categorías" />
+      <Button fx:id="gestionarUsuariosButton" mnemonicParsing="false" onAction="#onGestionarUsuarios" text="Gestionar Usuarios" />
+      <Button fx:id="gestionarAdministradoresButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#onGestionarAdministradores" text="Gestionar Administradores" textAlignment="CENTER" />
+   </children>
+</VBox>
